@@ -15,16 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from config.views import index
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),       # 관리자 페이지
+    path('posts/', include('posts.urls')),
+    path('users/', include('users.urls')),  # users/urls.py를 추가
     path('', index),    # 경로가 없을 때 index View 연결
 ]
-urlpatterns += static(
+urlpatterns += static(      # 사용자가 업로드한 정적파일
     prefix=settings.MEDIA_URL,
     document_root=settings.MEDIA_ROOT
 )
