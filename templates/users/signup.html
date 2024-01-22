@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="signup">
+  <form method="POST" enctype="multipart/form-data">   <!-- Template의 form은 파일(profile_image)의 전송을 포함하고 있으므로 form의 enctype 속성을 반드시 multipart/form-data로 정의해야 한다. -->
+    <h1>Pystagram</h1>
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" class="btn btn-signup">가입</button>
+    <a href="/users/login/">로그인 페이지로 이동</a>
+  </form>
+</div>
+{% endblock %}
