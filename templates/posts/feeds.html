@@ -7,7 +7,7 @@
   <div id="feeds" class="post-container">
   <!-- 전달된 Post QuerySet 객체를 순회 -->
   {% for post in posts %}
-    <article class="post">
+    <article class="post" id="post-{{post.id}}">
       <header class="post-header">
         {% if post.user.profile_image %}
           <img src="{{post.user.profile_image.url}}">
@@ -22,7 +22,7 @@
         </div>
         <div class="post-buttons">
           <button>Likes(0)</button>
-          <span>Comments(0)</span>
+          <span>Comments({{post.comment_set.count}})</span>
         </div>
         <div class="post-comments">
           <ul>
@@ -31,14 +31,26 @@
               <li>
                 <span>{{comment.user.username}}</span>
                 <span>{{comment.content}}</span>
+
+                <!-- 댓글 삭제 form 추가 -->
+                {% if user == comment.user %}   <!-- 현재 로그인된 사용자가 댓글의 작성자인지 확인 후 일치할 경우에만 삭제 버튼 만듦 -->
+                <form action="/posts/comment_delete/{{comment.id}}/" method="POST">
+                  {% csrf_token %}
+                  <button type="submit">삭제</button>
+                </form>
+                {% endif %}
               </li>
             {% endfor %}
           </ul>
         </div>
         <small>{{post.created}}</small>
         <div class="post-comment-create">
-          <input type="text" placeholder="댓글 달기...">
-          <button type="submit">게시</button>
+          <form method="POST" action="/posts/comment_add/">
+            {% csrf_token %}
+            <input type="hidden" name="post" value="{{post.id}}">
+            {{comment_form.content}}      <!-- 전달된 CommentForm의 필드들 중, 'content' 필드만 렌더링 -->
+            <button type="submit">게시</button>
+          </form>
         </div>
         <div class="splide__track">
           <ul class="splide__list">
